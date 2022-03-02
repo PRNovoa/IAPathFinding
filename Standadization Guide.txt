@@ -1,0 +1,17 @@
+Super hiper mega guide for standardizing the project
+-Lang <en>
+-Variables
+	-Clear and short names
+	-Camel case
+
+-Functions
+	-Clear and short names
+	-Pascal case
+	
+-Git
+	-Commits
+		-! Very important
+		-+ New implementations
+		-* Bug fixes
+		
+		-Summary: Shot description of the push
