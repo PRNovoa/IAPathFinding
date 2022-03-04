@@ -37,6 +37,8 @@ namespace Assets.Scripts.DataStructures
 
         private bool repeat;
 
+        //Añade el current Cell y inicializa el GoalFinder
+        //Falta el path movement ---
         public override Locomotion.MoveDirection GetNextMove(BoardInfo boardInfo, CellInfo currentPos, CellInfo[] goals)
         {
             if (toSearch.Count <= 0)
@@ -45,11 +47,14 @@ namespace Assets.Scripts.DataStructures
                 
                 GoalFinder(boardInfo, currentPos, goals);
             }
+
             return Locomotion.MoveDirection.None;
         }
 
         #region AuxiliaryFunctions
 
+        //Comprueba si es un duplicado (Celda repetida en el array de las checkeadas)
+        //Da error de out of bounds en el index
         private bool CheckRepeated(List<Node> list, BoardInfo boardInfo, int index)
         {
             for (int i = 0; i < list.Count; i++)
@@ -70,22 +75,30 @@ namespace Assets.Scripts.DataStructures
         /// <summary>
         /// Called to check every cell until goal found
         /// </summary>
+
+        //Función de búsqueda
         private CellInfo GoalFinder(BoardInfo boardInfo, CellInfo currentPos, CellInfo[] goals)
-        {            
+        {          
+            //Si se queda sin nodos a buscar
             if (toSearch.Count <= 0)
             {
                 Debug.Log("AY CARUMBA");
                 return currentPos;
             }
 
+            //Mientras que no haya encontrado el nodo Goal
             while (!foundGoal)
             {
+                //Busca los adyacentes
                 for (int i = 0; i < toSearch[0].currentNode.WalkableNeighbours(boardInfo).Length; i++)
                 {
+                    //Inicializas a false para poner algo
                     repeat = false;
 
+                    //Primero comprueba si no esta repetido y si no lo esta, te lo pone como !repeat, analizandolo en el siguiente if
                     if (toSearch[0].currentNode.WalkableNeighbours(boardInfo)[i] != null && searched[0].currentNode.WalkableNeighbours(boardInfo)[i] != null)
                     {
+                        //Esos debug.log son para pruebas ni te rayes
                         Debug.Log("Entrada");
                         repeat = CheckRepeated(searched, boardInfo, i);
                         Debug.Log("Medio");
@@ -93,8 +106,12 @@ namespace Assets.Scripts.DataStructures
                         Debug.Log("Salida");
                     }
 
+                    //Si no esta repetido
                     if (!repeat)
                     {
+                        //Añade el nodo investigado al array de ToSearch
+                        //¿Tendría que añadirlo al searched en vez del ToSearch?
+                        //¿El CellId te devuelve null si no es Walkable? (No me queda claro)
                         switch (i)
                         {
                             case (0):
@@ -114,18 +131,21 @@ namespace Assets.Scripts.DataStructures
                                 break;
                         }
                     }
+
+                    //Si el nodo es Goal le saca del bucle y le pasa al if (foundGoal)
                     if (toSearch[0].currentNode.CellId == goals[0].CellId) { foundGoal = true; }
                 }
 
-                //Si se encuentra el nodo de Goal
+                //Si se encuentra el nodo de Goal, manda dicho nodo valido de vuelta
                 if (foundGoal)
                 {
                     Debug.Log("AY CARAMBA");
                     return toSearch[0].currentNode;
                 }
             }
-            return null;
-            
+
+            //Tiene que devolver la funcion algo siempre (Por control, relleno la verdad)
+            return null;         
         }
 
         #endregion Algorithm
