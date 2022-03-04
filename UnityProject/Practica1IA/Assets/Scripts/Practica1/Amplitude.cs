@@ -71,7 +71,7 @@ namespace Assets.Scripts.DataStructures
         /// Called to check every cell until goal found
         /// </summary>
         private CellInfo GoalFinder(BoardInfo boardInfo, CellInfo currentPos, CellInfo[] goals)
-        {
+        {            
             if (toSearch.Count <= 0)
             {
                 Debug.Log("AY CARUMBA");
@@ -116,6 +116,8 @@ namespace Assets.Scripts.DataStructures
                     }
                     if (toSearch[0].currentNode.CellId == goals[0].CellId) { foundGoal = true; }
                 }
+
+                //Si se encuentra el nodo de Goal
                 if (foundGoal)
                 {
                     Debug.Log("AY CARAMBA");
